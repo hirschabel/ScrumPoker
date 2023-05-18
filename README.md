@@ -1,0 +1,2 @@
+# ScrumPoker
+## IT napra
