@@ -37,6 +37,7 @@ io.on('connection', (socket) => {
       callback({ status: 'error', message: 'Room does not exist' });
     } else {
       socket.join(roomName);
+      console.log('join username: ', userName);
       rooms[roomName].users[socket.id] = userName;
       io.to(roomName).emit('updateUserList', Object.values(rooms[roomName].users));
       callback({ status: 'success' });
@@ -49,7 +50,7 @@ io.on('connection', (socket) => {
     } else if (!rooms[roomName].users[socket.id]) {
       callback({ status: 'error', message: 'User not in room' });
     } else {
-      rooms[roomName].votes[socket.id] = value;
+      rooms[roomName].votes[rooms[roomName].users[socket.id]] = value;
       io.to(roomName).emit('voteUpdate', rooms[roomName].votes);
       callback({ status: 'success' });
     }
@@ -69,8 +70,8 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
     for (let room of Object.values(rooms)) {
       if (room.users[socket.id]) {
+        delete room.votes[room.users[socket.id]];
         delete room.users[socket.id];
-        delete room.votes[socket.id];
         console.log(room);
         io.to(room.name).emit('updateUserList', Object.values(room.users));
         io.to(room.name).emit('voteUpdate', room.votes);
