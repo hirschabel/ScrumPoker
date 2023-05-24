@@ -46,6 +46,12 @@ function Home(props) {
           console.error(response.message);
         }
       });
+
+      socket.emit("updateVoteOptions", roomId, (response) => {
+        if (response.status !== "success") {
+          console.error(response.message);
+        }
+      });
     });
   }
 

@@ -6,6 +6,7 @@ function Room(props) {
 
   const [votes, setVotes] = useState({});
   const [users, setUsers] = useState([]);
+  const [voteOptions, setVoteOptions] = useState([]);
 
   const location = useLocation();
   const roomName = location.state.roomName;
@@ -23,14 +24,20 @@ function Room(props) {
       setVotes({});
     });
 
+    socket.on("updateVoteOptions", (voteOptions) => {
+      setVoteOptions(voteOptions);
+    });
+
     return () => {
       socket.off("voteUpdate");
       socket.off("clearVotes");
       socket.off("updateUserList");
+      socket.off("updateVoteOptions");
     };
   }, []);
 
-  const vote = (value) => {
+  const vote = (index) => {
+    let value = voteOptions[index];
     socket.emit("vote", roomName, value, (response) => {
       if (response.status !== "success") {
         console.error(response.message);
@@ -60,9 +67,19 @@ function Room(props) {
           <div key={socketId}>{`${socketId}: ${voteValue}`}</div>
         ))}
       </div>
-      <button onClick={() => vote(1)}>1</button>
-      <button onClick={() => vote(2)}>2</button>
-      <button onClick={() => vote(3)}>3</button>
+      <div className="number-card-container">
+        {voteOptions.map((number, index) => (
+          <div className="number-card" key={"asd" + index}>
+            <button
+              onClick={() => vote(index)}
+              title="Click to delete"
+              className="add-button"
+            >
+              {number}
+            </button>
+          </div>
+        ))}
+      </div>
       <button onClick={clearVotes}>Clear votes</button>
     </div>
   );

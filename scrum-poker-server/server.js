@@ -19,7 +19,7 @@ let rooms = {};
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on("createRoom", (roomName, callback) => {
+  socket.on("createRoom", (roomName, voteOptions, callback) => {
     if (rooms[roomName]) {
       callback({ status: "error", message: "Room already exists" });
     } else {
@@ -27,6 +27,7 @@ io.on("connection", (socket) => {
         name: roomName,
         users: {},
         votes: {},
+        voteOptions: voteOptions,
       };
       callback({ status: "success" });
     }
@@ -76,6 +77,20 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("updateVoteOptions", (roomName, callback) => {
+    if (!rooms[roomName]) {
+      callback({ status: "error", message: "Room does not exist" });
+    } else if (!rooms[roomName].users[socket.id]) {
+      callback({
+        status: "error",
+        message: "User not in room",
+      });
+    } else {
+      io.to(roomName).emit("updateVoteOptions", rooms[roomName].voteOptions);
+      callback({ status: "success" });
+    }
+  });
+
   socket.on("clearVotes", (roomName, callback) => {
     if (!rooms[roomName]) {
       callback({ status: "error", message: "Room does not exist" });
@@ -90,7 +105,6 @@ io.on("connection", (socket) => {
     if (!rooms[roomName]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      rooms[roomName].votes = {};
       io.to(roomName).emit(
         "updateUserList",
         Object.values(rooms[roomName].users)

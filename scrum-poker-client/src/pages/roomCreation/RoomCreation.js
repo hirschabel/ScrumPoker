@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./RoomCreation.css";
 
 function RoomCreation(props) {
   const socket = props.socket;
@@ -8,11 +9,31 @@ function RoomCreation(props) {
   const [username, setUsername] = useState("");
   const [roomName, setRoomName] = useState("");
 
-  function createRoomSocket(inputName) {
+  const [voteOptions, setVoteOptions] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const addNumber = () => {
+    if (inputValue !== "") {
+      setVoteOptions([...voteOptions, Number(inputValue)]);
+      setInputValue("");
+    }
+  };
+
+  const deleteVoteOption = (index) => {
+    let arr = voteOptions.copyWithin();
+    arr.splice(index, 1);
+    setVoteOptions([...arr]);
+  };
+
+  function createRoomSocket(inputName, voteOptions) {
     console.log("CREATE ROOM", inputName);
 
     return new Promise((resolve, reject) => {
-      socket.emit("createRoom", inputName, (response) => {
+      socket.emit("createRoom", inputName, voteOptions, (response) => {
         if (response.status === "success") {
           console.log("Created room successfully");
           resolve(true);
@@ -26,7 +47,7 @@ function RoomCreation(props) {
 
   function handleCreateClick() {
     let letrehozva = "?";
-    createRoomSocket(roomName).then((result) => {
+    createRoomSocket(roomName, voteOptions).then((result) => {
       letrehozva = result;
       console.log("letrehozva", letrehozva);
       if (!roomName.trim() || !letrehozva) {
@@ -61,7 +82,7 @@ function RoomCreation(props) {
         }
       });
 
-      socket.emit("updateVotes", roomName, (response) => {
+      socket.emit("updateVoteOptions", roomName, (response) => {
         if (response.status !== "success") {
           console.error(response.message);
         }
@@ -77,6 +98,7 @@ function RoomCreation(props) {
     <div className="card-container">
       <h1 className="card-title">Create room</h1>
       <div className="card">
+        <h2 className="card-title">Room informations</h2>
         <input
           type="text"
           value={username}
@@ -89,6 +111,31 @@ function RoomCreation(props) {
           onChange={(event) => setRoomName(event.target.value)}
           placeholder="Room Name"
         />
+        <h2 className="card-title">Create vote options</h2>
+        <input
+          type="number"
+          value={inputValue}
+          onChange={handleInputChange}
+          placeholder="Vote option"
+        />
+        <button onClick={addNumber} className="add-button">
+          Add
+        </button>
+
+        <div className="number-card-container">
+          {voteOptions.map((number, index) => (
+            <div className="number-card" key={index}>
+              <button
+                onClick={() => deleteVoteOption(index)}
+                title="Click to delete"
+                className="add-button"
+              >
+                {number}
+              </button>
+            </div>
+          ))}
+        </div>
+
         <div className="button-container">
           <button onClick={handleCreateClick}>Create</button>
           <button onClick={handleBackClick}>Back</button>
