@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
-function Home(props) {
-  const socket = props.socket;
+function Home({ socket }) {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -33,24 +32,6 @@ function Home(props) {
           username: username,
           roomName: roomId,
         },
-      });
-
-      socket.emit("updateUserList", roomId, (response) => {
-        if (response.status !== "success") {
-          console.error(response.message);
-        }
-      });
-
-      socket.emit("updateVotes", roomId, (response) => {
-        if (response.status !== "success") {
-          console.error(response.message);
-        }
-      });
-
-      socket.emit("updateVoteOptions", roomId, (response) => {
-        if (response.status !== "success") {
-          console.error(response.message);
-        }
       });
     });
   }

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RoomCreation.css";
 
-function RoomCreation(props) {
-  const socket = props.socket;
+function RoomCreation({ socket }) {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -74,18 +73,6 @@ function RoomCreation(props) {
           username: username,
           roomName: roomName,
         },
-      });
-
-      socket.emit("updateUserList", roomName, (response) => {
-        if (response.status !== "success") {
-          console.error(response.message);
-        }
-      });
-
-      socket.emit("updateVoteOptions", roomName, (response) => {
-        if (response.status !== "success") {
-          console.error(response.message);
-        }
       });
     });
   }

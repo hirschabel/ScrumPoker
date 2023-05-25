@@ -105,6 +105,7 @@ io.on("connection", (socket) => {
     if (!rooms[roomName]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
+      socket.join(roomName);
       io.to(roomName).emit(
         "updateUserList",
         Object.values(rooms[roomName].users)

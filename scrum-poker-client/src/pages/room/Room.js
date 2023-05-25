@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import VoteOptionsCard from "../../components/cards/VoteOptionsCard";
+import ActionButtonsCard from "../../components/cards/ActionButtonsCard";
+import UsersCard from "../../components/cards/UsersCard";
 
-function Room(props) {
-  const socket = props.socket;
-
+function Room({ socket }) {
+  const [votesVisibility, setVotesVisibility] = useState(false);
   const [votes, setVotes] = useState({});
   const [users, setUsers] = useState([]);
   const [voteOptions, setVoteOptions] = useState([]);
@@ -36,51 +38,52 @@ function Room(props) {
     };
   }, []);
 
-  const vote = (index) => {
-    let value = voteOptions[index];
-    socket.emit("vote", roomName, value, (response) => {
+  useEffect(() => {
+    socket.emit("updateVotes", roomName, (response) => {
       if (response.status !== "success") {
         console.error(response.message);
       }
     });
-  };
 
-  const clearVotes = () => {
-    socket.emit("clearVotes", roomName, (response) => {
+    socket.emit("updateVoteOptions", roomName, (response) => {
       if (response.status !== "success") {
         console.error(response.message);
       }
     });
-  };
+
+    socket.emit("updateUserList", roomName, (response) => {
+      if (response.status !== "success") {
+        console.error(response.message);
+      }
+    });
+  }, [location]);
+
+  function changeVotesVisibility() {
+    setVotesVisibility(!votesVisibility);
+  }
 
   return (
     <div>
-      <div>
-        <h2>Users in Room</h2>
-        {users.map((user, index) => (
-          <div key={index}>{user}</div>
-        ))}
-      </div>
-      <div>
-        <h2>Votes</h2>
-        {Object.entries(votes).map(([socketId, voteValue]) => (
-          <div key={socketId}>{`${socketId}: ${voteValue}`}</div>
-        ))}
-      </div>
-      <div className="number-card-container">
-        {voteOptions.map((number, index) => (
-          <div className="number-card" key={"asd" + index}>
-            <button
-              onClick={() => vote(index)}
-              title="Click to delete"
-              className="add-button"
-            >
-              {number}
-            </button>
-          </div>
-        ))}
-      </div>
-      <button onClick={clearVotes}>Clear votes</button>
+      <UsersCard
+        users={users}
+        votes={votes}
+        votesVisibility={votesVisibility}
+      />
+      <VoteOptionsCard
+        voteOptions={voteOptions ? voteOptions : []}
+        room={roomName}
+        socket={socket}
+        userVotedOn={
+          votes[location.state.username] ? votes[location.state.username] : ""
+        }
+      />
+      <ActionButtonsCard
+        room={roomName}
+        socket={socket}
+        changeVotesVisibility={changeVotesVisibility}
+        votesVisibility={votesVisibility}
+        votes={votes}
+      />
     </div>
   );
 }
