@@ -17,8 +17,6 @@ const io = new Server(server, {
 let rooms = {};
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
-
   socket.on("createRoom", (roomName, voteOptions, callback) => {
     if (rooms[roomName]) {
       callback({ status: "error", message: "Room already exists" });
@@ -38,7 +36,6 @@ io.on("connection", (socket) => {
       callback({ status: "error", message: "Room does not exist" });
     } else {
       socket.join(roomName);
-      console.log("join username: ", userName);
       rooms[roomName].users[socket.id] = userName;
       io.to(roomName).emit(
         "updateUserList",
@@ -66,11 +63,6 @@ io.on("connection", (socket) => {
   socket.on("updateVotes", (roomName, callback) => {
     if (!rooms[roomName]) {
       callback({ status: "error", message: "Room does not exist" });
-    } else if (!rooms[roomName].users[socket.id]) {
-      callback({
-        status: "error",
-        message: "User not in room",
-      });
     } else {
       io.to(roomName).emit("voteUpdate", rooms[roomName].votes);
       callback({ status: "success" });
@@ -80,11 +72,6 @@ io.on("connection", (socket) => {
   socket.on("updateVoteOptions", (roomName, callback) => {
     if (!rooms[roomName]) {
       callback({ status: "error", message: "Room does not exist" });
-    } else if (!rooms[roomName].users[socket.id]) {
-      callback({
-        status: "error",
-        message: "User not in room",
-      });
     } else {
       io.to(roomName).emit("updateVoteOptions", rooms[roomName].voteOptions);
       callback({ status: "success" });
@@ -115,12 +102,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
     for (let room of Object.values(rooms)) {
       if (room.users[socket.id]) {
         delete room.votes[room.users[socket.id]];
         delete room.users[socket.id];
-        console.log(room);
         io.to(room.name).emit("updateUserList", Object.values(room.users));
         io.to(room.name).emit("voteUpdate", room.votes);
       }

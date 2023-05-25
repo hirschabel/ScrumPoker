@@ -3,7 +3,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import ListGroupItem from "react-bootstrap/esm/ListGroupItem";
 import "./Cards.css";
 
-function ActionButtonsCard({
+export default function ActionButtonsCard({
   socket,
   room,
   changeVotesVisibility,
@@ -57,5 +57,3 @@ function ActionButtonsCard({
     </Card>
   );
 }
-
-export default ActionButtonsCard;

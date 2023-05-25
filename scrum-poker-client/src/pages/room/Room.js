@@ -4,7 +4,7 @@ import VoteOptionsCard from "../../components/cards/VoteOptionsCard";
 import ActionButtonsCard from "../../components/cards/ActionButtonsCard";
 import UsersCard from "../../components/cards/UsersCard";
 
-function Room({ socket }) {
+export default function Room({ socket }) {
   const [votesVisibility, setVotesVisibility] = useState(false);
   const [votes, setVotes] = useState({});
   const [users, setUsers] = useState([]);
@@ -58,9 +58,9 @@ function Room({ socket }) {
     });
   }, [location]);
 
-  function changeVotesVisibility() {
+  const changeVotesVisibility = () => {
     setVotesVisibility(!votesVisibility);
-  }
+  };
 
   return (
     <div>
@@ -87,5 +87,3 @@ function Room({ socket }) {
     </div>
   );
 }
-
-export default Room;

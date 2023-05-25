@@ -1,44 +1,23 @@
 import React, { useState } from "react";
-import "./Home.css";
+import "./Join.css";
 import { useNavigate } from "react-router-dom";
+import { joinRoom } from "../../utils/RoomUtil";
 
-function Home({ socket }) {
+export default function Join({ socket }) {
   const navigate = useNavigate();
-
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
 
-  function handleJoinClick() {
+  const handleJoinClick = () => {
     if (!username.trim() && !roomId.trim()) {
       return;
     }
+    joinRoom(socket, navigate, roomId, username);
+  };
 
-    new Promise((resolve, _) => {
-      socket.emit("joinRoom", roomId, username, (response) => {
-        const isSucces = response.status === "success";
-        if (isSucces) {
-          console.log("Joined room successfully");
-        }
-        resolve(isSucces);
-      });
-    }).then((result) => {
-      console.log("JOINED: ", result);
-      if (!result) {
-        return;
-      }
-
-      navigate("/room", {
-        state: {
-          username: username,
-          roomName: roomId,
-        },
-      });
-    });
-  }
-
-  function handleCreateClick() {
+  const handleCreateClick = () => {
     navigate("/room-creation");
-  }
+  };
 
   return (
     <div className="card-container">
@@ -64,5 +43,3 @@ function Home({ socket }) {
     </div>
   );
 }
-
-export default Home;

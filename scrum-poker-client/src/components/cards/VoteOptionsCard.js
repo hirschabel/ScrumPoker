@@ -1,6 +1,11 @@
 import Card from "react-bootstrap/Card";
 
-function VoteOptionsCard({ socket, room, voteOptions, userVotedOn }) {
+export default function VoteOptionsCard({
+  socket,
+  room,
+  voteOptions,
+  userVotedOn,
+}) {
   const vote = (value) => {
     socket.emit("vote", room, value, (response) => {
       if (response.status !== "success") {
@@ -23,7 +28,7 @@ function VoteOptionsCard({ socket, room, voteOptions, userVotedOn }) {
           <button
             key={index}
             onClick={() => vote(number)}
-            title="Click to delete"
+            title="Click to vote"
             className="add-button"
             style={{ margin: "5px" }}
           >
@@ -34,5 +39,3 @@ function VoteOptionsCard({ socket, room, voteOptions, userVotedOn }) {
     </Card>
   );
 }
-
-export default VoteOptionsCard;

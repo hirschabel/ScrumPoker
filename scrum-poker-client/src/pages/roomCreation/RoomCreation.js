@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RoomCreation.css";
+import { joinRoom } from "../../utils/RoomUtil";
+import { createRoomSocket } from "../../utils/RoomUtil";
 
-function RoomCreation({ socket }) {
+export default function RoomCreation({ socket }) {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -16,10 +18,9 @@ function RoomCreation({ socket }) {
   };
 
   const addNumber = () => {
-    if (inputValue !== "") {
-      setVoteOptions([...voteOptions, Number(inputValue)]);
-      setInputValue("");
-    }
+    if (inputValue === "") return;
+    setVoteOptions([...voteOptions, Number(inputValue)]);
+    setInputValue("");
   };
 
   const deleteVoteOption = (index) => {
@@ -28,58 +29,16 @@ function RoomCreation({ socket }) {
     setVoteOptions([...arr]);
   };
 
-  function createRoomSocket(inputName, voteOptions) {
-    console.log("CREATE ROOM", inputName);
-
-    return new Promise((resolve, reject) => {
-      socket.emit("createRoom", inputName, voteOptions, (response) => {
-        if (response.status === "success") {
-          console.log("Created room successfully");
-          resolve(true);
-        } else {
-          console.error(response.message);
-          resolve(false);
-        }
-      });
-    });
-  }
-
-  function handleCreateClick() {
-    let letrehozva = "?";
+  const handleCreateClick = () => {
     createRoomSocket(roomName, voteOptions).then((result) => {
-      letrehozva = result;
-      console.log("letrehozva", letrehozva);
-      if (!roomName.trim() || !letrehozva) {
-        return;
-      }
-
-      new Promise((resolve, _) => {
-        socket.emit("joinRoom", roomName, username, (response) => {
-          const isSucces = response.status === "success";
-          if (isSucces) {
-            console.log("Joined room successfully");
-          }
-          resolve(isSucces);
-        });
-      }).then((result) => {
-        console.log("JOINED: ", result);
-        if (!result) {
-          return;
-        }
-      });
-
-      navigate("/room", {
-        state: {
-          username: username,
-          roomName: roomName,
-        },
-      });
+      if (!roomName.trim() || !result) return;
+      joinRoom(socket, navigate, roomName, username);
     });
-  }
+  };
 
-  function handleBackClick() {
+  const handleBackClick = () => {
     navigate(-1);
-  }
+  };
 
   return (
     <div className="card-container">
@@ -131,5 +90,3 @@ function RoomCreation({ socket }) {
     </div>
   );
 }
-
-export default RoomCreation;

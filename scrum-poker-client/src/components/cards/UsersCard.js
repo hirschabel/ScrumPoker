@@ -1,7 +1,7 @@
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 
-function UsersCard({ users, votes, votesVisibility }) {
+export default function UsersCard({ users, votes, votesVisibility }) {
   return (
     <Card
       style={{
@@ -39,5 +39,3 @@ function UsersCard({ users, votes, votesVisibility }) {
     </Card>
   );
 }
-
-export default UsersCard;
