@@ -34,26 +34,52 @@ export function voteSocket(socket, room, value) {
   });
 }
 
-export function updatedVotesSocket(socket, roomName) {
+export function updatedVotesSocket(socket, navigate, roomName) {
   socket.emit("updateVotes", roomName, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
+      navigate("/");
     }
   });
 }
 
-export function updateVoteOptionsSocket(socket, roomName) {
+export function updateVoteOptionsSocket(socket, navigate, roomName) {
   socket.emit("updateVoteOptions", roomName, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
+      navigate("/");
     }
   });
 }
 
-export function updateUserListSocket(socket, roomName) {
+export function updateUserListSocket(socket, navigate, roomName) {
   socket.emit("updateUserList", roomName, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
+      navigate("/");
+    }
+  });
+}
+
+export function setVotesVisibilitySocket(
+  socket,
+  navigate,
+  roomName,
+  visibility
+) {
+  socket.emit("setVotesVisibility", roomName, visibility, (response) => {
+    if (response.status !== "success") {
+      console.error(response.message);
+      navigate("/");
+    }
+  });
+}
+
+export function updateVotesVisibilitySocket(socket, navigate, roomName) {
+  socket.emit("updateVotesVisibility", roomName, (response) => {
+    if (response.status !== "success") {
+      console.error(response.message);
+      navigate("/");
     }
   });
 }

@@ -26,6 +26,7 @@ io.on("connection", (socket) => {
         users: {},
         votes: {},
         voteOptions: voteOptions,
+        votesVisibility: false,
       };
       callback({ status: "success" });
     }
@@ -96,6 +97,28 @@ io.on("connection", (socket) => {
       io.to(roomName).emit(
         "updateUserList",
         Object.values(rooms[roomName].users)
+      );
+      callback({ status: "success" });
+    }
+  });
+
+  socket.on("setVotesVisibility", (roomName, visibility, callback) => {
+    if (!rooms[roomName]) {
+      callback({ status: "error", message: "Room does not exist" });
+    } else {
+      rooms[roomName].votesVisibility = visibility;
+      io.to(roomName).emit("updateVotesVisibility", visibility);
+      callback({ status: "success" });
+    }
+  });
+
+  socket.on("updateVotesVisibility", (roomName, callback) => {
+    if (!rooms[roomName]) {
+      callback({ status: "error", message: "Room does not exist" });
+    } else {
+      io.to(roomName).emit(
+        "updateVotesVisibility",
+        rooms[roomName].votesVisibility
       );
       callback({ status: "success" });
     }
