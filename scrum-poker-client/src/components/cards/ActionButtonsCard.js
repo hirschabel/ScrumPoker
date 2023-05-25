@@ -25,31 +25,19 @@ export default function ActionButtonsCard({
   };
 
   return (
-    <Card
-      style={{
-        border: "2px solid grey",
-        background: "#fcdcd7",
-        width: "300px",
-      }}
-    >
-      <Card.Body>
-        <ListGroup>
-          <ListGroupItem>
-            <button
-              className="action-button"
-              onClick={() => clearVotesSocket(socket, room)}
-            >
-              Clear votes
-            </button>
-            <button className="action-button" onClick={changeVotesVisibility}>
-              {votesVisibility ? "Hide" : "Show"} votes
-            </button>
-            <button className="action-button" onClick={calculateAvg}>
-              Calculate
-            </button>
-          </ListGroupItem>
-        </ListGroup>
-      </Card.Body>
-    </Card>
+    <div>
+      <button
+        className="action-button"
+        onClick={() => clearVotesSocket(socket, room)}
+      >
+        Clear votes
+      </button>
+      <button className="action-button" onClick={changeVotesVisibility}>
+        {votesVisibility ? "Hide" : "Show"} votes
+      </button>
+      <button className="action-button" onClick={calculateAvg}>
+        Calculate
+      </button>
+    </div>
   );
 }

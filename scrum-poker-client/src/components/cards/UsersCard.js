@@ -1,41 +1,16 @@
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
+import "./Cards.css";
 
 export default function UsersCard({ users, votes, votesVisibility }) {
   return (
-    <Card
-      style={{
-        border: "2px solid grey",
-        background: "#fcfbe6",
-        width: "300px",
-      }}
-    >
-      <Card.Title>Users</Card.Title>
-      <Card.Body>
-        <ListGroup>
-          {users.map((user, index) => (
-            <div key={index}>
-              <ListGroup.Item>
-                <Card
-                  style={{
-                    background: "#fcfac7",
-                    width: "240px",
-                    margin: "10px",
-                  }}
-                >
-                  <Card.Body>
-                    <Card.Title>{user} </Card.Title>
-                    <Card.Text>
-                      Vote:{" "}
-                      {!votesVisibility ? "?" : votes[user] ? votes[user] : ""}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </ListGroup.Item>
-            </div>
-          ))}
-        </ListGroup>
-      </Card.Body>
-    </Card>
+    <div className="users-container">
+      {users.map((user, index) => (
+        <div key={index} className="user-card">
+          <h2>{user}</h2>
+          <h5>
+            Voted on: {!votesVisibility ? "?" : votes[user] ? votes[user] : ""}
+          </h5>
+        </div>
+      ))}
+    </div>
   );
 }

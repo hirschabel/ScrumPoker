@@ -10,6 +10,7 @@ import {
   updateVotesVisibilitySocket,
   updatedVotesSocket,
 } from "../../utils/SocketUtils";
+import "./Room.css";
 
 export default function Room({ socket }) {
   const [votesVisibility, setVotesVisibility] = useState(false);
@@ -63,17 +64,18 @@ export default function Room({ socket }) {
   };
 
   return (
-    <div>
+    <div className="room-container">
+      <h1>{roomName}</h1>
       <UsersCard
         users={users}
         votes={votes}
         votesVisibility={votesVisibility}
       />
+      <h2>Mire szavazunk?</h2>
       <VoteOptionsCard
         voteOptions={voteOptions}
         room={roomName}
         socket={socket}
-        userVotedOn={votes[location?.state?.username]}
       />
       <ActionButtonsCard
         room={roomName}

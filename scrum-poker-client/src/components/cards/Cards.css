@@ -1,5 +1,5 @@
 .action-button {
-  margin: 10px;
+  margin: 30px 10px 10px 10px;
 }
 
 .action-button {
@@ -9,6 +9,7 @@
   background-color: #ff2c10;
   color: #fff;
   cursor: pointer;
+  width: 200px;
 }
 
 .action-button:hover {
@@ -17,4 +18,44 @@
 
 .action-button:active {
   background-color: #a50404;
+}
+
+.users-container,
+.vote-options-container {
+  width: 1000px;
+  overflow-x: scroll;
+  white-space: nowrap;
+  margin: 10px;
+  padding: 5px;
+  text-align: left;
+}
+
+.users-container {
+  background-color: #add3ff;
+}
+
+.vote-options-container {
+  background-color: #b5f7c6;
+}
+
+.user-card,
+.vote-option {
+  display: inline-block;
+  color: white;
+  text-align: left;
+  padding: 5px;
+  text-decoration: none;
+  margin: 5px;
+}
+
+.user-card {
+  border: 3px solid rgb(0, 0, 0);
+  background: #537fdd;
+  border-radius: 4px;
+  width: 224px;
+}
+
+.vote-option {
+  width: 90px;
+  text-align: center;
 }
