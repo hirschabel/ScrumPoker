@@ -1,4 +1,5 @@
 import Card from "react-bootstrap/Card";
+import { voteSocket } from "../../utils/SocketUtils";
 
 export default function VoteOptionsCard({
   socket,
@@ -6,14 +7,6 @@ export default function VoteOptionsCard({
   voteOptions,
   userVotedOn,
 }) {
-  const vote = (value) => {
-    socket.emit("vote", room, value, (response) => {
-      if (response.status !== "success") {
-        console.error(response.message);
-      }
-    });
-  };
-
   return (
     <Card
       style={{
@@ -27,7 +20,7 @@ export default function VoteOptionsCard({
         {voteOptions?.map((number, index) => (
           <button
             key={index}
-            onClick={() => vote(number)}
+            onClick={() => voteSocket(socket, room, number)}
             title="Click to vote"
             className="add-button"
             style={{ margin: "5px" }}

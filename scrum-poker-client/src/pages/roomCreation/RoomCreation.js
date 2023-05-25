@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RoomCreation.css";
 import { joinRoom } from "../../utils/RoomUtil";
-import { createRoomSocket } from "../../utils/RoomUtil";
+import { createRoom } from "../../utils/RoomUtil";
 
 export default function RoomCreation({ socket }) {
   const navigate = useNavigate();
@@ -30,14 +30,10 @@ export default function RoomCreation({ socket }) {
   };
 
   const handleCreateClick = () => {
-    createRoomSocket(roomName, voteOptions).then((result) => {
+    createRoom(socket, roomName, voteOptions).then((result) => {
       if (!roomName.trim() || !result) return;
       joinRoom(socket, navigate, roomName, username);
     });
-  };
-
-  const handleBackClick = () => {
-    navigate(-1);
   };
 
   return (
@@ -84,7 +80,7 @@ export default function RoomCreation({ socket }) {
 
         <div className="button-container">
           <button onClick={handleCreateClick}>Create</button>
-          <button onClick={handleBackClick}>Back</button>
+          <button onClick={() => navigate(-1)}>Back</button>
         </div>
       </div>
     </div>

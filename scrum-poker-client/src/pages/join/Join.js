@@ -8,17 +8,6 @@ export default function Join({ socket }) {
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
 
-  const handleJoinClick = () => {
-    if (!username.trim() && !roomId.trim()) {
-      return;
-    }
-    joinRoom(socket, navigate, roomId, username);
-  };
-
-  const handleCreateClick = () => {
-    navigate("/room-creation");
-  };
-
   return (
     <div className="card-container">
       <h1 className="card-title">Join to room</h1>
@@ -36,8 +25,10 @@ export default function Join({ socket }) {
           placeholder="Room ID"
         />
         <div className="button-container">
-          <button onClick={handleJoinClick}>Join</button>
-          <button onClick={handleCreateClick}>Create</button>
+          <button onClick={() => joinRoom(socket, navigate, roomId, username)}>
+            Join
+          </button>
+          <button onClick={() => navigate("/room-creation")}>Create</button>
         </div>
       </div>
     </div>

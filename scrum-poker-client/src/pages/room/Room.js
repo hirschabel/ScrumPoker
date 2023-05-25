@@ -3,6 +3,11 @@ import { useLocation } from "react-router-dom";
 import VoteOptionsCard from "../../components/cards/VoteOptionsCard";
 import ActionButtonsCard from "../../components/cards/ActionButtonsCard";
 import UsersCard from "../../components/cards/UsersCard";
+import {
+  updateUserListSocket,
+  updateVoteOptionsSocket,
+  updatedVotesSocket,
+} from "../../utils/SocketUtils";
 
 export default function Room({ socket }) {
   const [votesVisibility, setVotesVisibility] = useState(false);
@@ -39,23 +44,9 @@ export default function Room({ socket }) {
   }, []);
 
   useEffect(() => {
-    socket.emit("updateVotes", roomName, (response) => {
-      if (response.status !== "success") {
-        console.error(response.message);
-      }
-    });
-
-    socket.emit("updateVoteOptions", roomName, (response) => {
-      if (response.status !== "success") {
-        console.error(response.message);
-      }
-    });
-
-    socket.emit("updateUserList", roomName, (response) => {
-      if (response.status !== "success") {
-        console.error(response.message);
-      }
-    });
+    updatedVotesSocket(socket, roomName);
+    updateVoteOptionsSocket(socket, roomName);
+    updateUserListSocket(socket, roomName);
   }, [location]);
 
   const changeVotesVisibility = () => {

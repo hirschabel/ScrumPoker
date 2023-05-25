@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import ListGroupItem from "react-bootstrap/esm/ListGroupItem";
+import { clearVotesSocket } from "../../utils/SocketUtils";
 import "./Cards.css";
 
 export default function ActionButtonsCard({
@@ -10,25 +11,17 @@ export default function ActionButtonsCard({
   votesVisibility,
   votes,
 }) {
-  const clearVotes = () => {
-    socket.emit("clearVotes", room, (response) => {
-      if (response.status !== "success") {
-        console.error(response.message);
-      }
-    });
-  };
-
   const calculateAvg = () => {
     let usersVoted = 0;
     let sum = 0;
-    votes.forEach((_, value) => {
+    for (const value of Object.values(votes)) {
       if (value) {
         sum += value;
         usersVoted++;
       }
-    });
-    console.log(sum / usersVoted);
-    clearVotes();
+    }
+    clearVotesSocket(socket, room);
+    return sum / usersVoted;
   };
 
   return (
@@ -42,7 +35,10 @@ export default function ActionButtonsCard({
       <Card.Body>
         <ListGroup>
           <ListGroupItem>
-            <button className="action-button" onClick={clearVotes}>
+            <button
+              className="action-button"
+              onClick={() => clearVotesSocket(socket, room)}
+            >
               Clear votes
             </button>
             <button className="action-button" onClick={changeVotesVisibility}>
