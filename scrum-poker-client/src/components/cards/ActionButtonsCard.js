@@ -1,12 +1,9 @@
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
-import ListGroupItem from "react-bootstrap/esm/ListGroupItem";
 import { clearVotesSocket } from "../../utils/SocketUtils";
 import "./Cards.css";
 
 export default function ActionButtonsCard({
   socket,
-  room,
+  roomId,
   changeVotesVisibility,
   votesVisibility,
   votes,
@@ -20,7 +17,7 @@ export default function ActionButtonsCard({
         usersVoted++;
       }
     }
-    clearVotesSocket(socket, room);
+    clearVotesSocket(socket, roomId);
     return sum / usersVoted;
   };
 
@@ -28,7 +25,7 @@ export default function ActionButtonsCard({
     <div>
       <button
         className="action-button"
-        onClick={() => clearVotesSocket(socket, room)}
+        onClick={() => clearVotesSocket(socket, roomId)}
       >
         Clear votes
       </button>

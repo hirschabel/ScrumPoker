@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RoomCreation.css";
-import { joinRoom } from "../../utils/RoomUtil";
 import { createRoom } from "../../utils/RoomUtil";
+import { FaPlus } from "react-icons/fa";
 
 export default function RoomCreation({ socket }) {
   const navigate = useNavigate();
@@ -29,13 +29,6 @@ export default function RoomCreation({ socket }) {
     setVoteOptions([...arr]);
   };
 
-  const handleCreateClick = () => {
-    createRoom(socket, roomName, voteOptions).then((result) => {
-      if (!roomName.trim() || !result) return;
-      joinRoom(socket, navigate, roomName, username);
-    });
-  };
-
   return (
     <div className="card-container">
       <h1 className="card-title">Create room</h1>
@@ -54,15 +47,17 @@ export default function RoomCreation({ socket }) {
           placeholder="Room Name"
         />
         <h2 className="card-title">Create vote options</h2>
-        <input
-          type="number"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="Vote option"
-        />
-        <button onClick={addNumber} className="add-button">
-          Add
-        </button>
+        <div className="add-vote-option-container">
+          <input
+            type="number"
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="Vote option"
+          />
+          <button onClick={addNumber} className="add-button plus-button">
+            <FaPlus />
+          </button>
+        </div>
 
         <div className="number-card-container">
           {voteOptions.map((number, index) => (
@@ -79,7 +74,13 @@ export default function RoomCreation({ socket }) {
         </div>
 
         <div className="button-container">
-          <button onClick={handleCreateClick}>Create</button>
+          <button
+            onClick={() =>
+              createRoom(socket, roomName, username, navigate, voteOptions)
+            }
+          >
+            Create
+          </button>
           <button onClick={() => navigate(-1)}>Back</button>
         </div>
       </div>

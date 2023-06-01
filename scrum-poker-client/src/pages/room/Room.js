@@ -10,7 +10,9 @@ import {
   updateVotesVisibilitySocket,
   updatedVotesSocket,
 } from "../../utils/SocketUtils";
+import { leaveRoom } from "../../utils/RoomUtil";
 import "./Room.css";
+import { FaRegClipboard, FaDoorOpen } from "react-icons/fa";
 
 export default function Room({ socket }) {
   const [votesVisibility, setVotesVisibility] = useState(false);
@@ -20,6 +22,7 @@ export default function Room({ socket }) {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const roomId = location?.state?.roomId;
   const roomName = location?.state?.roomName;
 
   useEffect(() => {
@@ -53,19 +56,26 @@ export default function Room({ socket }) {
   }, []);
 
   useEffect(() => {
-    updatedVotesSocket(socket, navigate, roomName);
-    updateVoteOptionsSocket(socket, navigate, roomName);
-    updateUserListSocket(socket, navigate, roomName);
-    updateVotesVisibilitySocket(socket, navigate, roomName);
+    updatedVotesSocket(socket, navigate, roomId);
+    updateVoteOptionsSocket(socket, navigate, roomId);
+    updateUserListSocket(socket, navigate, roomId);
+    updateVotesVisibilitySocket(socket, navigate, roomId);
   }, [location]);
 
   const changeVotesVisibility = () => {
-    setVotesVisibilitySocket(socket, navigate, roomName, !votesVisibility);
+    setVotesVisibilitySocket(socket, navigate, roomId, !votesVisibility);
   };
 
   return (
     <div className="room-container">
-      <h1>{roomName}</h1>
+      <h1>
+        {roomName}{" "}
+        <FaRegClipboard
+          onClick={() => navigator.clipboard.writeText(roomId)}
+          style={{ cursor: "pointer", opacity: 0.5 }}
+          title="Copy room ID to clipboard"
+        />
+      </h1>
       <UsersCard
         users={users}
         votes={votes}
@@ -74,16 +84,23 @@ export default function Room({ socket }) {
       <h2>Mire szavazunk?</h2>
       <VoteOptionsCard
         voteOptions={voteOptions}
-        room={roomName}
+        roomId={roomId}
         socket={socket}
       />
       <ActionButtonsCard
-        room={roomName}
+        roomId={roomId}
         socket={socket}
         changeVotesVisibility={changeVotesVisibility}
         votesVisibility={votesVisibility}
         votes={votes}
       />
+      <h1>
+        <FaDoorOpen
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer", alignSelf: "flex-end" }}
+          title="Leave the room"
+        />
+      </h1>
     </div>
   );
 }

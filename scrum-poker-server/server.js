@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const roomUtils = require("./utils/RoomUtil.js");
 
 const app = express();
 app.use(cors());
@@ -21,104 +22,100 @@ io.on("connection", (socket) => {
     if (rooms[roomName]) {
       callback({ status: "error", message: "Room already exists" });
     } else {
-      rooms[roomName] = {
+      let roomId = roomUtils.generateRoomId();
+      rooms[roomId] = {
+        id: roomId,
         name: roomName,
         users: {},
         votes: {},
         voteOptions: voteOptions,
         votesVisibility: false,
       };
-      callback({ status: "success" });
+      callback({ status: "success", roomId: roomId });
     }
   });
 
-  socket.on("joinRoom", (roomName, userName, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("joinRoom", (roomId, userName, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      socket.join(roomName);
-      rooms[roomName].users[socket.id] = userName;
-      io.to(roomName).emit(
-        "updateUserList",
-        Object.values(rooms[roomName].users)
-      );
-      callback({ status: "success" });
+      socket.join(roomId);
+      rooms[roomId].users[socket.id] = userName;
+      io.to(roomId).emit("updateUserList", Object.values(rooms[roomId].users));
+      callback({ status: "success", roomName: rooms[roomId].name });
     }
   });
 
-  socket.on("vote", (roomName, value, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("vote", (roomId, value, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
-    } else if (!rooms[roomName].users[socket.id]) {
+    } else if (!rooms[roomId].users[socket.id]) {
       callback({
         status: "error",
         message: "User not in room",
       });
     } else {
-      rooms[roomName].votes[rooms[roomName].users[socket.id]] = value;
-      io.to(roomName).emit("voteUpdate", rooms[roomName].votes);
+      rooms[roomId].votes[rooms[roomId].users[socket.id]] = value;
+      io.to(roomId).emit("voteUpdate", rooms[roomId].votes);
       callback({ status: "success" });
     }
   });
 
-  socket.on("updateVotes", (roomName, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("updateVotes", (roomId, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      io.to(roomName).emit("voteUpdate", rooms[roomName].votes);
+      io.to(roomId).emit("voteUpdate", rooms[roomId].votes);
       callback({ status: "success" });
     }
   });
 
-  socket.on("updateVoteOptions", (roomName, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("updateVoteOptions", (roomId, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      io.to(roomName).emit("updateVoteOptions", rooms[roomName].voteOptions);
+      io.to(roomId).emit("updateVoteOptions", rooms[roomId].voteOptions);
       callback({ status: "success" });
     }
   });
 
-  socket.on("clearVotes", (roomName, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("clearVotes", (roomId, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      rooms[roomName].votes = {};
-      io.to(roomName).emit("clearVotes");
+      rooms[roomId].votes = {};
+      io.to(roomId).emit("clearVotes");
       callback({ status: "success" });
     }
   });
 
-  socket.on("updateUserList", (roomName, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("updateUserList", (roomId, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      socket.join(roomName);
-      io.to(roomName).emit(
-        "updateUserList",
-        Object.values(rooms[roomName].users)
-      );
+      socket.join(roomId);
+      io.to(roomId).emit("updateUserList", Object.values(rooms[roomId].users));
       callback({ status: "success" });
     }
   });
 
-  socket.on("setVotesVisibility", (roomName, visibility, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("setVotesVisibility", (roomId, visibility, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      rooms[roomName].votesVisibility = visibility;
-      io.to(roomName).emit("updateVotesVisibility", visibility);
+      rooms[roomId].votesVisibility = visibility;
+      io.to(roomId).emit("updateVotesVisibility", visibility);
       callback({ status: "success" });
     }
   });
 
-  socket.on("updateVotesVisibility", (roomName, callback) => {
-    if (!rooms[roomName]) {
+  socket.on("updateVotesVisibility", (roomId, callback) => {
+    if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      io.to(roomName).emit(
+      io.to(roomId).emit(
         "updateVotesVisibility",
-        rooms[roomName].votesVisibility
+        rooms[roomId].votesVisibility
       );
       callback({ status: "success" });
     }

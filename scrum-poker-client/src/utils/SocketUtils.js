@@ -1,20 +1,18 @@
 export function createRoomSocket(socket, resolve, roomName, voteOptions) {
   socket.emit("createRoom", roomName, voteOptions, (response) => {
-    const isSucces = response.status === "success";
-    if (!isSucces) {
+    if (response.status !== "success") {
       console.error(response.message);
     }
-    resolve(isSucces);
+    resolve(response.roomId);
   });
 }
 
-export function joinRoomSocket(socket, resolve, roomName, username) {
-  socket.emit("joinRoom", roomName, username, (response) => {
-    const isSucces = response.status === "success";
-    if (!isSucces) {
+export function joinRoomSocket(socket, resolve, roomId, username) {
+  socket.emit("joinRoom", roomId, username, (response) => {
+    if (response.status !== "success") {
       console.error(response.message);
     }
-    resolve(isSucces);
+    resolve(response.roomName);
   });
 }
 
@@ -34,8 +32,8 @@ export function voteSocket(socket, room, value) {
   });
 }
 
-export function updatedVotesSocket(socket, navigate, roomName) {
-  socket.emit("updateVotes", roomName, (response) => {
+export function updatedVotesSocket(socket, navigate, roomId) {
+  socket.emit("updateVotes", roomId, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");
@@ -43,8 +41,8 @@ export function updatedVotesSocket(socket, navigate, roomName) {
   });
 }
 
-export function updateVoteOptionsSocket(socket, navigate, roomName) {
-  socket.emit("updateVoteOptions", roomName, (response) => {
+export function updateVoteOptionsSocket(socket, navigate, roomId) {
+  socket.emit("updateVoteOptions", roomId, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");
@@ -52,8 +50,8 @@ export function updateVoteOptionsSocket(socket, navigate, roomName) {
   });
 }
 
-export function updateUserListSocket(socket, navigate, roomName) {
-  socket.emit("updateUserList", roomName, (response) => {
+export function updateUserListSocket(socket, navigate, roomId) {
+  socket.emit("updateUserList", roomId, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");
@@ -61,13 +59,8 @@ export function updateUserListSocket(socket, navigate, roomName) {
   });
 }
 
-export function setVotesVisibilitySocket(
-  socket,
-  navigate,
-  roomName,
-  visibility
-) {
-  socket.emit("setVotesVisibility", roomName, visibility, (response) => {
+export function setVotesVisibilitySocket(socket, navigate, roomId, visibility) {
+  socket.emit("setVotesVisibility", roomId, visibility, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");
@@ -75,8 +68,8 @@ export function setVotesVisibilitySocket(
   });
 }
 
-export function updateVotesVisibilitySocket(socket, navigate, roomName) {
-  socket.emit("updateVotesVisibility", roomName, (response) => {
+export function updateVotesVisibilitySocket(socket, navigate, roomId) {
+  socket.emit("updateVotesVisibility", roomId, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");
