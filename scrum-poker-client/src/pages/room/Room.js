@@ -9,8 +9,8 @@ import {
   updateVoteOptionsSocket,
   updateVotesVisibilitySocket,
   updatedVotesSocket,
+  setProjectsSocket,
 } from "../../utils/SocketUtils";
-import { leaveRoom } from "../../utils/RoomUtil";
 import "./Room.css";
 import { FaRegClipboard, FaDoorOpen } from "react-icons/fa";
 
@@ -19,6 +19,7 @@ export default function Room({ socket }) {
   const [votes, setVotes] = useState({});
   const [users, setUsers] = useState([]);
   const [voteOptions, setVoteOptions] = useState([]);
+  const [projects, setProjects] = useState([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,12 +47,17 @@ export default function Room({ socket }) {
       setVotesVisibility(visibility);
     });
 
+    socket.on("setProjects", (projects) => {
+      setProjects(projects);
+    });
+
     return () => {
       socket.off("voteUpdate");
       socket.off("clearVotes");
       socket.off("updateUserList");
       socket.off("updateVoteOptions");
       socket.off("updateVotesVisibility");
+      socket.off("setProjects");
     };
   }, []);
 
@@ -60,6 +66,7 @@ export default function Room({ socket }) {
     updateVoteOptionsSocket(socket, navigate, roomId);
     updateUserListSocket(socket, navigate, roomId);
     updateVotesVisibilitySocket(socket, navigate, roomId);
+    setProjectsSocket(socket, navigate, roomId);
   }, [location]);
 
   const changeVotesVisibility = () => {

@@ -76,3 +76,12 @@ export function updateVotesVisibilitySocket(socket, navigate, roomId) {
     }
   });
 }
+
+export function setProjectsSocket(socket, navigate, roomId) {
+  socket.emit("setProjects", roomId, (response) => {
+    if (response.status !== "success") {
+      console.error(response.message);
+      navigate("/");
+    }
+  });
+}

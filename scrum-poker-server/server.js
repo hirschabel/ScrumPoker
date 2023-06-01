@@ -121,6 +121,17 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("setProjects", (roomId, callback) => {
+    if (!rooms[roomId]) {
+      callback({ status: "error", message: "Room does not exist" });
+    } else {
+      roomUtils.fetchProjects().then((projects) => {
+        io.to(roomId).emit("setProjects", projects);
+      });
+      callback({ status: "success" });
+    }
+  });
+
   socket.on("disconnect", () => {
     for (let room of Object.values(rooms)) {
       if (room.users[socket.id]) {

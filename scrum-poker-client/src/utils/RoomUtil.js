@@ -1,8 +1,4 @@
-import {
-  createRoomSocket,
-  joinRoomSocket,
-  leaveRoomSocket,
-} from "./SocketUtils";
+import { createRoomSocket, joinRoomSocket } from "./SocketUtils";
 
 export function joinRoom(socket, navigate, roomId, username) {
   new Promise((resolve, _) => {
