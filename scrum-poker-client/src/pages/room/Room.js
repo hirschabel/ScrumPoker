@@ -17,6 +17,7 @@ import { FaRegClipboard, FaDoorOpen } from "react-icons/fa";
 export default function Room({ socket }) {
   const [votesVisibility, setVotesVisibility] = useState(false);
   const [votes, setVotes] = useState({});
+  const [issue, setIssue] = useState({});
   const [users, setUsers] = useState([]);
   const [voteOptions, setVoteOptions] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -51,6 +52,10 @@ export default function Room({ socket }) {
       setProjects(projects);
     });
 
+    socket.on("setIssue", (issue) => {
+      setIssue(issue);
+    });
+
     return () => {
       socket.off("voteUpdate");
       socket.off("clearVotes");
@@ -58,6 +63,7 @@ export default function Room({ socket }) {
       socket.off("updateVoteOptions");
       socket.off("updateVotesVisibility");
       socket.off("setProjects");
+      socket.off("setIssue");
     };
   }, []);
 
@@ -88,7 +94,8 @@ export default function Room({ socket }) {
         votes={votes}
         votesVisibility={votesVisibility}
       />
-      <h2>Mire szavazunk?</h2>
+      <h2>Estimate issue:</h2>
+      <h3>{issue.subject}</h3>
       <VoteOptionsCard
         voteOptions={voteOptions}
         roomId={roomId}
@@ -100,6 +107,7 @@ export default function Room({ socket }) {
         changeVotesVisibility={changeVotesVisibility}
         votesVisibility={votesVisibility}
         votes={votes}
+        projects={projects}
       />
       <h1>
         <FaDoorOpen

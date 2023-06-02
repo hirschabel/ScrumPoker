@@ -9,9 +9,8 @@ function generateRoomId() {
   return id;
 }
 
-async function fetchProjects() {
+async function fetchProjects(apiKey) {
   const url = "https://redmine.tigra.hu/projects.json?limit=1000";
-  const apiKey = "";
 
   const response = await fetch(url, {
     headers: {
@@ -20,11 +19,30 @@ async function fetchProjects() {
     },
   });
 
+  if (response.status != 200) return [];
   const data = await response.json();
+
   return data.projects;
+}
+
+async function fetchIssues(apiKey, projectId) {
+  const url = `https://redmine.tigra.hu/issues.json?project_id=${projectId}`;
+
+  const response = await fetch(url, {
+    headers: {
+      method: "GET",
+      "Content-Type": "application/json",
+      Authorization: `Basic ${btoa(apiKey + ":")}`,
+    },
+  });
+  if (response.status != 200) return [];
+  const data = await response.json();
+
+  return data.issues;
 }
 
 module.exports = {
   generateRoomId: generateRoomId,
   fetchProjects: fetchProjects,
+  fetchIssues: fetchIssues,
 };

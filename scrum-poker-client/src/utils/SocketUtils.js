@@ -1,5 +1,11 @@
-export function createRoomSocket(socket, resolve, roomName, voteOptions) {
-  socket.emit("createRoom", roomName, voteOptions, (response) => {
+export function createRoomSocket(
+  socket,
+  resolve,
+  roomName,
+  voteOptions,
+  apiKey
+) {
+  socket.emit("createRoom", roomName, voteOptions, apiKey, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
     }
@@ -79,6 +85,24 @@ export function updateVotesVisibilitySocket(socket, navigate, roomId) {
 
 export function setProjectsSocket(socket, navigate, roomId) {
   socket.emit("setProjects", roomId, (response) => {
+    if (response.status !== "success") {
+      console.error(response.message);
+      navigate("/");
+    }
+  });
+}
+
+export function setIssuesSocket(socket, navigate, roomId, projectId) {
+  socket.emit("setIssues", roomId, projectId, (response) => {
+    if (response.status !== "success") {
+      console.error(response.message);
+      navigate("/");
+    }
+  });
+}
+
+export function setIssueSocket(socket, navigate, roomId, issue) {
+  socket.emit("setIssue", roomId, issue, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");

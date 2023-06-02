@@ -16,9 +16,16 @@ export function joinRoom(socket, navigate, roomId, username) {
   });
 }
 
-export function createRoom(socket, roomName, username, navigate, voteOptions) {
+export function createRoom(
+  socket,
+  roomName,
+  username,
+  apiKey,
+  navigate,
+  voteOptions
+) {
   new Promise((resolve, _) => {
-    createRoomSocket(socket, resolve, roomName, voteOptions);
+    createRoomSocket(socket, resolve, roomName, voteOptions, apiKey);
   }).then((roomId) => {
     if (!roomId) return;
     joinRoom(socket, navigate, roomId, username);

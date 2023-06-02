@@ -1,4 +1,6 @@
 import { clearVotesSocket } from "../../utils/SocketUtils";
+import React, { useState } from "react";
+import IssueSelectionModal from "../modals/IssueSelectionModal";
 import "./Cards.css";
 
 export default function ActionButtonsCard({
@@ -7,7 +9,10 @@ export default function ActionButtonsCard({
   changeVotesVisibility,
   votesVisibility,
   votes,
+  projects,
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const calculateAvg = () => {
     let usersVoted = 0;
     let sum = 0;
@@ -23,6 +28,17 @@ export default function ActionButtonsCard({
 
   return (
     <div>
+      <button className="action-button" onClick={() => setIsModalOpen(true)}>
+        Select issue
+      </button>
+      {isModalOpen && (
+        <IssueSelectionModal
+          onClose={() => setIsModalOpen(false)}
+          projects={projects}
+          socket={socket}
+          roomId={roomId}
+        />
+      )}
       <button
         className="action-button"
         onClick={() => clearVotesSocket(socket, roomId)}

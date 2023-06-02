@@ -18,7 +18,7 @@ const io = new Server(server, {
 let rooms = {};
 
 io.on("connection", (socket) => {
-  socket.on("createRoom", (roomName, voteOptions, callback) => {
+  socket.on("createRoom", (roomName, voteOptions, apiKey, callback) => {
     if (rooms[roomName]) {
       callback({ status: "error", message: "Room already exists" });
     } else {
@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
         votes: {},
         voteOptions: voteOptions,
         votesVisibility: false,
+        apiKey: apiKey,
       };
       callback({ status: "success", roomId: roomId });
     }
@@ -125,9 +126,29 @@ io.on("connection", (socket) => {
     if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      roomUtils.fetchProjects().then((projects) => {
+      roomUtils.fetchProjects(rooms[roomId].apiKey).then((projects) => {
         io.to(roomId).emit("setProjects", projects);
       });
+      callback({ status: "success" });
+    }
+  });
+
+  socket.on("setIssues", (roomId, projectId, callback) => {
+    if (!rooms[roomId]) {
+      callback({ status: "error", message: "Room does not exist" });
+    } else {
+      roomUtils.fetchIssues(rooms[roomId].apiKey, projectId).then((issues) => {
+        io.to(roomId).emit("setIssues", issues);
+      });
+      callback({ status: "success" });
+    }
+  });
+
+  socket.on("setIssue", (roomId, issue, callback) => {
+    if (!rooms[roomId]) {
+      callback({ status: "error", message: "Room does not exist" });
+    } else {
+      io.to(roomId).emit("setIssue", issue);
       callback({ status: "success" });
     }
   });

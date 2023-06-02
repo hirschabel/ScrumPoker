@@ -9,8 +9,9 @@ export default function RoomCreation({ socket }) {
 
   const [username, setUsername] = useState("");
   const [roomName, setRoomName] = useState("");
+  const [apiKey, setApiKey] = useState("");
 
-  const [voteOptions, setVoteOptions] = useState([]);
+  const [voteOptions, setVoteOptions] = useState([0.5, 1, 3, 5, 8]);
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event) => {
@@ -46,6 +47,12 @@ export default function RoomCreation({ socket }) {
           onChange={(event) => setRoomName(event.target.value)}
           placeholder="Room Name"
         />
+        <input
+          type="text"
+          value={apiKey}
+          onChange={(event) => setApiKey(event.target.value)}
+          placeholder="API key"
+        />
         <h2 className="card-title">Create vote options</h2>
         <div className="add-vote-option-container">
           <input
@@ -76,7 +83,14 @@ export default function RoomCreation({ socket }) {
         <div className="button-container">
           <button
             onClick={() =>
-              createRoom(socket, roomName, username, navigate, voteOptions)
+              createRoom(
+                socket,
+                roomName,
+                username,
+                apiKey,
+                navigate,
+                voteOptions
+              )
             }
           >
             Create
