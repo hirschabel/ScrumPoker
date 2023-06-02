@@ -5,14 +5,14 @@ export default function VoteOptionsCard({ socket, roomId, voteOptions }) {
   return (
     <div className="vote-options-container">
       {voteOptions.map((number, index) => (
-        <button
+        <div
           key={index}
           onClick={() => voteSocket(socket, roomId, number)}
           title="Click to vote"
           className="vote-option"
         >
-          {number}
-        </button>
+          <h2 className="vote-otpion-value">{number}</h2>
+        </div>
       ))}
     </div>
   );

@@ -34,14 +34,10 @@
   background-color: #add3ff;
 }
 
-.vote-options-container {
-  background-color: #b5f7c6;
-}
-
 .user-card,
 .vote-option {
   display: inline-block;
-  color: white;
+  color: black;
   text-align: left;
   padding: 5px;
   text-decoration: none;
@@ -56,6 +52,24 @@
 }
 
 .vote-option {
-  width: 90px;
+  width: 50px;
+  height: 50px;
   text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #e4faee;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.vote-option:hover {
+  background-color: #d2f7e3;
+}
+
+.vote-option:active {
+  background-color: #bff3d6;
+}
+
+.vote-otpion-value {
+  color: rgb(97, 97, 97);
 }

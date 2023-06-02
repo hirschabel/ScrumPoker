@@ -98,56 +98,63 @@ export default function Room({ socket }) {
 
   return (
     <div className="room-container">
-      <h1>
-        Welcome in {roomName}!
-        <FaRegClipboard
-          onClick={() => navigator.clipboard.writeText(roomId)}
-          style={{ cursor: "pointer", opacity: 0.5 }}
-          title="Copy room ID to clipboard"
-        />
-      </h1>
-      <UsersCard
-        users={users}
-        votes={votes}
-        votesVisibility={votesVisibility}
-      />
-      <h2>Estimate issue:</h2>
-      {issue ? (
-        <h3>
-          <a href={"https://redmine.tigra.hu/issues/" + issue?.id}>
-            #{issue?.id}
-          </a>
-          : {issue?.subject}
-        </h3>
-      ) : (
-        ""
-      )}
+      <div className="room-card">
+        <div className="room-container-title">
+          <h1>
+            Welcome in {roomName}!
+            <FaRegClipboard
+              onClick={() => navigator.clipboard.writeText(roomId)}
+              style={{ cursor: "pointer", opacity: 0.5 }}
+              title="Copy room ID to clipboard"
+            />
+          </h1>
+        </div>
 
-      <VoteOptionsCard
-        voteOptions={voteOptions}
-        roomId={roomId}
-        socket={socket}
-      />
-      <h2>
-        Avarage estimation:{" "}
-        {!votesVisibility ? "?" : avarageEstimation ? avarageEstimation : 0}
-      </h2>
-      <ActionButtonsCard
-        roomId={roomId}
-        socket={socket}
-        changeVotesVisibility={changeVotesVisibility}
-        votesVisibility={votesVisibility}
-        projects={projects}
-        issue={issue}
-        estimation={avarageEstimation}
-      />
-      <h1>
-        <FaDoorOpen
-          onClick={() => navigate("/")}
-          style={{ cursor: "pointer", alignSelf: "flex-end" }}
-          title="Leave the room"
+        <h2>
+          The avarage estimation is:{" "}
+          {!votesVisibility ? "?" : avarageEstimation ? avarageEstimation : 0}
+        </h2>
+        <div className="room-container-issue">
+          <h3>Select your estimationfor: &nbsp;</h3>
+          {issue ? (
+            <h4>
+              <a href={"https://redmine.tigra.hu/issues/" + issue?.id}>
+                #{issue?.id}
+              </a>
+              : {issue?.subject}
+            </h4>
+          ) : (
+            ""
+          )}
+        </div>
+
+        <VoteOptionsCard
+          voteOptions={voteOptions}
+          roomId={roomId}
+          socket={socket}
         />
-      </h1>
+        <ActionButtonsCard
+          roomId={roomId}
+          socket={socket}
+          changeVotesVisibility={changeVotesVisibility}
+          votesVisibility={votesVisibility}
+          projects={projects}
+          issue={issue}
+          estimation={avarageEstimation}
+        />
+        <UsersCard
+          users={users}
+          votes={votes}
+          votesVisibility={votesVisibility}
+        />
+        <h1>
+          <FaDoorOpen
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer", alignSelf: "flex-end" }}
+            title="Leave the room"
+          />
+        </h1>
+      </div>
     </div>
   );
 }
