@@ -55,3 +55,15 @@ button {
   border-radius: 3px;
   cursor: pointer;
 }
+
+.dropdown-option-container {
+  display: flex;
+}
+
+input[type="number"] {
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

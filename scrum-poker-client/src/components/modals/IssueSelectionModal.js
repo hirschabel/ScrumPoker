@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setIssuesSocket, setIssueSocket } from "../../utils/SocketUtils";
+import {
+  setIssuesSocket,
+  setIssueSocket,
+  clearVotesSocket,
+} from "../../utils/SocketUtils";
 import "./Modals.css";
 
 const IssueSelectionModal = ({ projects, socket, roomId, onClose }) => {
   const navigate = useNavigate();
   const [issueId, setIssueId] = useState("");
   const [issues, setIssues] = useState([]);
+  const [inputIssueId, setInputIssueId] = useState("");
 
   useEffect(() => {
     socket.on("setIssues", (issues) => {
@@ -20,6 +25,7 @@ const IssueSelectionModal = ({ projects, socket, roomId, onClose }) => {
 
   const handleProjectIdChange = (e) => {
     setIssuesSocket(socket, navigate, roomId, e.target.value);
+    clearVotesSocket(socket, roomId);
   };
 
   const handleIssueIdChange = (e) => {
@@ -27,9 +33,13 @@ const IssueSelectionModal = ({ projects, socket, roomId, onClose }) => {
   };
 
   const handleSubmit = () => {
-    let issue = issues.find((issue) => issue.id == issueId);
-    setIssueSocket(socket, navigate, roomId, issue);
+    let id = inputIssueId ? inputIssueId : issueId;
+    setIssueSocket(socket, navigate, roomId, id);
     onClose();
+  };
+
+  const handleInputChange = (event) => {
+    setInputIssueId(event.target.value);
   };
 
   return (
@@ -52,13 +62,20 @@ const IssueSelectionModal = ({ projects, socket, roomId, onClose }) => {
           <select id="issueId" value={issueId} onChange={handleIssueIdChange}>
             {issues.map((issue) => (
               <option key={issue.id} value={issue.id}>
-                {issue.subject}
+                #{issue.id}: {issue.subject}
               </option>
             ))}
           </select>
         </div>
+        <h4>OR</h4>
+        <input
+          type="number"
+          value={inputIssueId}
+          placeholder="Issue ID"
+          onChange={handleInputChange}
+        />
         <div className="modal-buttons">
-          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleSubmit}>Select</button>
           <button onClick={() => onClose()}>Close</button>
         </div>
       </div>

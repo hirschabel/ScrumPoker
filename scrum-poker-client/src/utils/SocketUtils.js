@@ -101,8 +101,17 @@ export function setIssuesSocket(socket, navigate, roomId, projectId) {
   });
 }
 
-export function setIssueSocket(socket, navigate, roomId, issue) {
-  socket.emit("setIssue", roomId, issue, (response) => {
+export function setIssueSocket(socket, navigate, roomId, id) {
+  socket.emit("setIssue", roomId, id, (response) => {
+    if (response.status !== "success") {
+      console.error(response.message);
+      navigate("/");
+    }
+  });
+}
+
+export function updateIssueSocket(socket, navigate, roomId) {
+  socket.emit("updateIssue", roomId, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");

@@ -144,11 +144,23 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("setIssue", (roomId, issue, callback) => {
+  socket.on("setIssue", (roomId, issueId, callback) => {
     if (!rooms[roomId]) {
       callback({ status: "error", message: "Room does not exist" });
     } else {
-      io.to(roomId).emit("setIssue", issue);
+      roomUtils.fetchIssue(rooms[roomId].apiKey, issueId).then((issue) => {
+        rooms[roomId].issue = issue;
+        io.to(roomId).emit("setIssue", rooms[roomId].issue);
+      });
+      callback({ status: "success" });
+    }
+  });
+
+  socket.on("updateIssue", (roomId, callback) => {
+    if (!rooms[roomId]) {
+      callback({ status: "error", message: "Room does not exist" });
+    } else {
+      io.to(roomId).emit("setIssue", rooms[roomId].issue);
       callback({ status: "success" });
     }
   });

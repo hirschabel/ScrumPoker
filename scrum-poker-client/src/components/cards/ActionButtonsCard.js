@@ -1,6 +1,7 @@
 import { clearVotesSocket } from "../../utils/SocketUtils";
 import React, { useState } from "react";
 import IssueSelectionModal from "../modals/IssueSelectionModal";
+import IssueEstimationModal from "../modals/IssueEstimationModal";
 import "./Cards.css";
 
 export default function ActionButtonsCard({
@@ -8,32 +9,26 @@ export default function ActionButtonsCard({
   roomId,
   changeVotesVisibility,
   votesVisibility,
-  votes,
   projects,
+  issue,
+  estimation,
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const calculateAvg = () => {
-    let usersVoted = 0;
-    let sum = 0;
-    for (const value of Object.values(votes)) {
-      if (value) {
-        sum += value;
-        usersVoted++;
-      }
-    }
-    clearVotesSocket(socket, roomId);
-    return sum / usersVoted;
-  };
+  const [isIssueSelectionModalOpen, setIsIssueSelectionModalOpen] =
+    useState(false);
+  const [isIssueEstimationModalOpen, setIsIssueEstimationModalOpen] =
+    useState(false);
 
   return (
     <div>
-      <button className="action-button" onClick={() => setIsModalOpen(true)}>
+      <button
+        className="action-button"
+        onClick={() => setIsIssueSelectionModalOpen(true)}
+      >
         Select issue
       </button>
-      {isModalOpen && (
+      {isIssueSelectionModalOpen && (
         <IssueSelectionModal
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsIssueSelectionModalOpen(false)}
           projects={projects}
           socket={socket}
           roomId={roomId}
@@ -48,9 +43,19 @@ export default function ActionButtonsCard({
       <button className="action-button" onClick={changeVotesVisibility}>
         {votesVisibility ? "Hide" : "Show"} votes
       </button>
-      <button className="action-button" onClick={calculateAvg}>
-        Calculate
+      <button
+        className="action-button"
+        onClick={() => setIsIssueEstimationModalOpen(true)}
+      >
+        Estimate issue
       </button>
+      {isIssueEstimationModalOpen && (
+        <IssueEstimationModal
+          onClose={() => setIsIssueEstimationModalOpen(false)}
+          issue={issue}
+          estimation={estimation}
+        />
+      )}
     </div>
   );
 }
