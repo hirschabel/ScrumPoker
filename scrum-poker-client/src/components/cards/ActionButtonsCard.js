@@ -19,7 +19,7 @@ export default function ActionButtonsCard({
     useState(false);
 
   return (
-    <div>
+    <div className="action-buttons-container">
       <button
         className="action-button"
         onClick={() => setIsIssueSelectionModalOpen(true)}

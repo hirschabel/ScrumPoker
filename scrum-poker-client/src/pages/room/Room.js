@@ -23,6 +23,7 @@ export default function Room({ socket }) {
   const [voteOptions, setVoteOptions] = useState([]);
   const [projects, setProjects] = useState([]);
   const [avarageEstimation, setAvarageEstimation] = useState(0);
+  const [votedOn, setVotedOn] = useState(0);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -115,10 +116,13 @@ export default function Room({ socket }) {
           {!votesVisibility ? "?" : avarageEstimation ? avarageEstimation : 0}
         </h2>
         <div className="room-container-issue">
-          <h3>Select your estimationfor: &nbsp;</h3>
+          <h3>Select your estimation for: &nbsp;</h3>
           {issue ? (
             <h4>
-              <a href={"https://redmine.tigra.hu/issues/" + issue?.id}>
+              <a
+                href={"https://redmine.tigra.hu/issues/" + issue?.id}
+                title="Open in Redmine"
+              >
                 #{issue?.id}
               </a>
               : {issue?.subject}
@@ -147,7 +151,7 @@ export default function Room({ socket }) {
           votes={votes}
           votesVisibility={votesVisibility}
         />
-        <h1>
+        <h1 className="leave-room-container">
           <FaDoorOpen
             onClick={() => navigate("/")}
             style={{ cursor: "pointer", alignSelf: "flex-end" }}

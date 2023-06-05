@@ -6,32 +6,26 @@
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background-color: #ff2c10;
+  background-color: #4caf50;
   color: #fff;
   cursor: pointer;
   width: 200px;
 }
 
 .action-button:hover {
-  background-color: #e61414;
+  background-color: #45a049;
 }
 
 .action-button:active {
-  background-color: #a50404;
+  background-color: #3c903c;
 }
 
-.users-container,
 .vote-options-container {
-  width: 1000px;
-  overflow-x: scroll;
-  white-space: nowrap;
+  width: auto;
+  height: auto;
   margin: 10px;
   padding: 5px;
   text-align: left;
-}
-
-.users-container {
-  background-color: #add3ff;
 }
 
 .user-card,
@@ -72,4 +66,38 @@
 
 .vote-otpion-value {
   color: rgb(97, 97, 97);
+}
+
+.table-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 10px 10px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #cfcfcf;
+}
+
+.action-buttons-container {
+  text-align: center;
+}
+
+.table tr:hover {
+  background-color: #f0f0f0;
 }
