@@ -18,6 +18,14 @@ export default function ActionButtonsCard({
   const [isIssueEstimationModalOpen, setIsIssueEstimationModalOpen] =
     useState(false);
 
+  const handleEstimationEvent = () => {
+    if (issue) {
+      setIsIssueEstimationModalOpen(true);
+    } else {
+      alert("Set an issue to estimate!");
+    }
+  };
+
   return (
     <div className="action-buttons-container">
       <button
@@ -43,10 +51,7 @@ export default function ActionButtonsCard({
       <button className="action-button" onClick={changeVotesVisibility}>
         {votesVisibility ? "Hide" : "Show"} votes
       </button>
-      <button
-        className="action-button"
-        onClick={() => setIsIssueEstimationModalOpen(true)}
-      >
+      <button className="action-button" onClick={handleEstimationEvent}>
         Estimate issue
       </button>
       {isIssueEstimationModalOpen && (
