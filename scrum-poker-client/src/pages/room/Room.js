@@ -23,7 +23,6 @@ export default function Room({ socket }) {
   const [voteOptions, setVoteOptions] = useState([]);
   const [projects, setProjects] = useState([]);
   const [avarageEstimation, setAvarageEstimation] = useState(0);
-  const [votedOn, setVotedOn] = useState(0);
 
   const navigate = useNavigate();
   const location = useLocation();

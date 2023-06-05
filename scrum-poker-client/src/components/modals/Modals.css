@@ -33,7 +33,7 @@
 }
 
 .dropdown select {
-  width: 100%;
+  width: 270px;
   padding: 5px;
   border-radius: 3px;
   border: 1px solid #ccc;
@@ -42,6 +42,7 @@
 .modal-buttons {
   display: flex;
   justify-content: center;
+  margin-top: 40px;
 }
 
 .modal-buttons button {
@@ -61,9 +62,13 @@ button {
 }
 
 input[type="number"] {
-  width: 90%;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 250px;
+  margin: 0px 0px 0px 0px;
+}
+
+.issue-selection-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 40px;
 }

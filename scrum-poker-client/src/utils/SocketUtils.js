@@ -92,8 +92,8 @@ export function setProjectsSocket(socket, navigate, roomId) {
   });
 }
 
-export function setIssuesSocket(socket, navigate, roomId, projectId) {
-  socket.emit("setIssues", roomId, projectId, (response) => {
+export function setIssuesSocket(socket, navigate, roomId, projectId, queryId) {
+  socket.emit("setIssues", roomId, projectId, queryId, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");
@@ -112,6 +112,15 @@ export function setIssueSocket(socket, navigate, roomId, id) {
 
 export function updateIssueSocket(socket, navigate, roomId) {
   socket.emit("updateIssue", roomId, (response) => {
+    if (response.status !== "success") {
+      console.error(response.message);
+      navigate("/");
+    }
+  });
+}
+
+export function setQueriesSocket(socket, navigate, roomId, projectId) {
+  socket.emit("setQueries", roomId, projectId, (response) => {
     if (response.status !== "success") {
       console.error(response.message);
       navigate("/");
